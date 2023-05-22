@@ -1,38 +1,40 @@
+/**
+ * @author Juan Jose Zeledon Benavides <zb.juanjose@gmail.com>
+ */
+
 const country = document.getElementById('country')
 const city = document.getElementById('city')
 
-const countries = ['Nicaragua', 'USA', 'España']
-const Nicaragua = ['Esteli', 'Leon', 'Matagalpa']
-const USA = ['Texas', 'Florida']
-const España = ['Bilbao', 'Madrid', 'Barcelona']
+/**
+ * Fill Select Function.
+ * @summary This function is used to fill dependent html select elements with information stored in a json file.
+ * @param { HTMLSelectElement } select - The id of the select element from the html that we need to fill.
+ * @param { Array } items - List of element that we are going to use to fill the select item.
+ * @return {undefined} - Function does not return any value.
+ */
 
-function fillCities (country) {
-  city.innerHTML = ''
-  if (country == 'Nicaragua') {
-    Nicaragua.forEach(element => {
-      city.innerHTML += `<option value="${element}">${element}</option>`
-    })
-  } else if (country == 'USA') {
-    USA.forEach(element => {
-      city.innerHTML += `<option value="${element}">${element}</option>`
-    })
-  } else {
-    España.forEach(element => {
-      city.innerHTML += `<option value="${element}">${element}</option>`
-    })
-  }
+function fillSelect (select, items) {
+  select.innerHTML = ''
+  items.forEach(element => {
+    const option = new Option(element)
+    select.add(option)
+  })
+  return
 }
 
 country.addEventListener('change', () => {
-  fillCities(country.value)
+  fetch('./information.json')
+    .then(response => response.json())
+    .then(data => {
+      const cities = data[country.value]
+      fillSelect(city, cities)
+    })
 })
 
-function fillCountries (countries) {
-  country.innerHTML = ''
-  countries.forEach(element => {
-    country.innerHTML += `<option value="${element}">${element}</option>`
+fetch('./information.json')
+  .then(response => response.json())
+  .then(data => {
+    countries = Object.keys(data)
+    fillSelect(country, countries)
+    fillSelect(city, data[countries[0]])
   })
-}
-
-fillCountries(countries)
-fillCities(countries[0])
