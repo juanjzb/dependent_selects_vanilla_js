@@ -2,8 +2,9 @@
  * @author Juan Jose Zeledon Benavides <zb.juanjose@gmail.com>
  */
 
-const country = document.getElementById('country')
-const city = document.getElementById('city')
+const main = document.getElementById('country')
+const dependent = document.getElementById('city')
+const file = './information.json'
 
 /**
  * Fill Select Function.
@@ -22,19 +23,19 @@ function fillSelect (select, items) {
   return
 }
 
-country.addEventListener('change', () => {
-  fetch('./information.json')
+main.addEventListener('change', () => {
+  fetch(file)
     .then(response => response.json())
     .then(data => {
-      const cities = data[country.value]
-      fillSelect(city, cities)
+      const dependentItems = data[main.value]
+      fillSelect(dependent, dependentItems)
     })
 })
 
-fetch('./information.json')
+fetch(file)
   .then(response => response.json())
   .then(data => {
-    countries = Object.keys(data)
-    fillSelect(country, countries)
-    fillSelect(city, data[countries[0]])
+    mainItems = Object.keys(data)
+    fillSelect(main, mainItems)
+    fillSelect(dependent, data[mainItems[0]])
   })
